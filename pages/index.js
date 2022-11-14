@@ -20,13 +20,15 @@ import styled from "styled-components";
 import { CSSReset } from "../src/components/CSSReset";
 import Menu from "../src/components/Menu";
 import { StyledTimeline } from "../src/components/Timeline";
+import React from "react";
 
 function HomePage() {
 
   const estiloHomePage = {
     //backgroundColor: "red" 
   };
-
+  const [valorDoFiltro, setValorDoFiltro] = React.useState("");
+  
   //console.log(config.playlists);
 
   return (
@@ -38,10 +40,11 @@ function HomePage() {
         flex: 1,
         // backgroundColor: "red",
       }}>
-        <Menu />
+        {/*Prop Drilling fura as aplicacoes buscando as propriedades*/ }
+        <Menu valorDoFiltro={valorDoFiltro} setValorDoFiltro={setValorDoFiltro}/>
         <main style={{display: "flex", flexDirection: "column",flex: 1}}>
           <Header />
-          <Timeline playlists={config.playlists}>
+          <Timeline searchValue={valorDoFiltro} playlists={config.playlists}>
             Conteúdo
           </Timeline>
         </main>
@@ -65,7 +68,8 @@ export default HomePage
 const StyledBanner = styled.div`
   width: 100%;
   height: 230px;
-  background-image : ${({bg}) => `url("${bg}")`};
+  background-image : url(${({ bg }) => bg });
+  /*background-image : url(${config.bg});*/
   background-size: cover;
   background-position: center;
   `;
@@ -79,7 +83,7 @@ const StyledHeader = styled.div`
 
     }
     .user-info {
-      margin-top: 50px;
+      
         display: flex;
         align-items: center;
         width: 100%;
@@ -87,10 +91,11 @@ const StyledHeader = styled.div`
         gap: 16px;
     }
   `;
+
 function Header() {
   return (
     <StyledHeader>
-      {/*<img src="banner" />*/}
+      <StyledBanner bg={config.bg}/>
       <section className="user-info">
         <img src={`https://github.com/${config.github}.png`} />
         <div>
@@ -106,7 +111,8 @@ function Header() {
 
 
 // for=statement e forEach=retorno de expressao ==== .map
-function Timeline(props) {
+// ... significa todas as outras... propriedades no caso.
+function Timeline({searchValue, ...props}) {
   //console.log("Dentro do componente", props.playlists);
   const playlistNames = Object.keys(props.playlists);
 
@@ -117,12 +123,18 @@ function Timeline(props) {
         const videos = props.playlists[playlistName];
         //console.log(videos);
         return (
-          <section>
+          <section key={playlistName}>
             <h2>{playlistName}</h2>
             <div>
-              {videos.map((video) => {
+                {videos.filter((video) => {
+                  const titleNormalized = video.title.toLowerCase();
+                  const searchValueNormalized = searchValue.toLowerCase();
+                  return titleNormalized.includes(searchValueNormalized)
+
+                })
+                .map((video) => {
                 return (
-                  <a href={video.url}>
+                  <a key={video.url} href={video.url}>
                     <img src={video.thumb} />
                     <span>
                       {video.title}
