@@ -1,5 +1,7 @@
 import React from "react";
 import { StyledRegisterVideo } from "./styles";
+import { createClient } from '@supabase/supabase-js';
+
 
 //writeboarding
 
@@ -23,6 +25,26 @@ function useForm(propsDoForm){
     };
 }
 
+const project_url = "https://srzkxpxewblmwcbunabn.supabase.co";
+const public_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNyemt4cHhld2JsbXdjYnVuYWJuIiwicm9sZSI6ImFub24iLCJpYXQiOjE2Njg0NTk2MTAsImV4cCI6MTk4NDAzNTYxMH0.Sb12VD2vh1zdt3Urvrmm8i0DrwQAgujKY0d51tvwr_g";
+const supabase = createClient(project_url, public_key)
+
+// get youtube video id
+// get youtube thumbnail from video url
+function getThumbnail(url) {
+    return `https://img.youtube.com/vi/${url.split("v=")[1]}/hqdefault.jpg`;
+}
+
+// function getVideoId(url) {
+//     const videoId = url.split("v=")[1];
+//     const ampersandPosition = videoId.indexOf("&");
+//     if (ampersandPosition !== -1) {
+//         return videoId.substring(0, ampersandPosition);
+//     }
+//     return videoId;
+// }
+
+
 
 export default function RegisterVideo(){
     //botao para adicionar
@@ -45,6 +67,7 @@ export default function RegisterVideo(){
     });
     const [formVisivel, setFormVisivel] = React.useState(false);
     
+    console.log(supabase.from("video").insert());
 
     return(
         <StyledRegisterVideo>
@@ -59,6 +82,20 @@ export default function RegisterVideo(){
                 <form onSubmit={(evento) => {
                     evento.preventDefault();
                     console.log(formCadastro.values);
+
+                        //contrato entre o front e back-end
+                    supabase.from("vide").insert({
+                        title: formCadastro.values.titulo,
+                        url: formCadastro.values.url,
+                        thumb: getThumbnail(formCadastro.values.url),
+                        playlist: "",
+                    }).then((oqueveio) => {
+                        console.log(oqueveio);
+                     })
+                     .catch((err) => {
+                        console.log(err);
+                     })
+
 
                     setFormVisivel(false);
                     formCadastro.clearForm();
