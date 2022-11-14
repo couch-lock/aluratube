@@ -3,12 +3,14 @@ import { createGlobalStyle } from "styled-components";
 export const CSSReset = createGlobalStyle`
   /* Reset */
   * {
-    margin: 0;
-    padding: 0;
+    margin:     0;
+    padding:    0;
     box-sizing: border-box;
   }
   body {
     font-family: sans-serif;
+    background-color: ${ ( { theme } ) => theme.backgroundBase  };
+    color: ${ ( { theme } ) => theme.textColorBase  };
   }
   /* NextJS */
   html {

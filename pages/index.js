@@ -17,23 +17,18 @@
 
 import config from "../config.json";
 import styled from "styled-components";
-import { CSSReset } from "../src/components/CSSReset";
 import Menu from "../src/components/Menu";
 import { StyledTimeline } from "../src/components/Timeline";
 import React from "react";
 
 function HomePage() {
 
-  const estiloHomePage = {
-    //backgroundColor: "red" 
-  };
   const [valorDoFiltro, setValorDoFiltro] = React.useState("");
-  
+
   //console.log(config.playlists);
 
   return (
     <>
-      <CSSReset />
       <div style={{
         display: "flex",
         flexDirection: "column",
@@ -76,6 +71,8 @@ const StyledBanner = styled.div`
 
 
 const StyledHeader = styled.div`
+    background-color: ${({ theme }) => theme.backgroundLevel1};
+    
     img {
       width: 80px;
       height: 80px;
@@ -112,21 +109,23 @@ function Header() {
 
 // for=statement e forEach=retorno de expressao ==== .map
 // ... significa todas as outras... propriedades no caso.
-function Timeline({searchValue, ...props}) {
-  //console.log("Dentro do componente", props.playlists);
-  const playlistNames = Object.keys(props.playlists);
+function Timeline({searchValue, ...propriedades}) {
+  //console.log("Dentro do componente", propriedades.playlists);
+  const playlistNames = Object.keys(propriedades.playlists);
 
   return (
     <StyledTimeline>
       {playlistNames.map((playlistName) => {
 
-        const videos = props.playlists[playlistName];
+        const videos = propriedades.playlists[playlistName];
         //console.log(videos);
         return (
+
           <section key={playlistName}>
             <h2>{playlistName}</h2>
             <div>
-                {videos.filter((video) => {
+                {
+                  videos.filter((video) => {
                   const titleNormalized = video.title.toLowerCase();
                   const searchValueNormalized = searchValue.toLowerCase();
                   return titleNormalized.includes(searchValueNormalized)
