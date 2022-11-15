@@ -27,7 +27,7 @@ function useForm(propsDoForm){
 
 const project_url = "https://srzkxpxewblmwcbunabn.supabase.co";
 const public_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNyemt4cHhld2JsbXdjYnVuYWJuIiwicm9sZSI6ImFub24iLCJpYXQiOjE2Njg0NTk2MTAsImV4cCI6MTk4NDAzNTYxMH0.Sb12VD2vh1zdt3Urvrmm8i0DrwQAgujKY0d51tvwr_g";
-const supabase = createClient(project_url, public_key)
+const supabase = createClient(project_url, public_key);
 
 // get youtube video id
 // get youtube thumbnail from video url
@@ -63,7 +63,7 @@ export default function RegisterVideo(){
     limpar o formulario apos o submit
 */
     const formCadastro = useForm({
-        initialValues: { titulo: "Titulo: ", url: "Url: " }
+        initialValues: { titulo: "Frost punk", url: "https://www.youtube.com/watch?v=QsqatJxAUtk" }
     });
     const [formVisivel, setFormVisivel] = React.useState(false);
     
@@ -84,11 +84,11 @@ export default function RegisterVideo(){
                     console.log(formCadastro.values);
 
                         //contrato entre o front e back-end
-                    supabase.from("vide").insert({
+                    supabase.from("video").insert({
                         title: formCadastro.values.titulo,
                         url: formCadastro.values.url,
                         thumb: getThumbnail(formCadastro.values.url),
-                        playlist: "",
+                        playlist: "jogos",
                     }).then((oqueveio) => {
                         console.log(oqueveio);
                      })
